@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1320" />
+  <meta name="description" content="VIX, MOVE, 미국 하이일드 OAS로 계산한 비트코인 복합 공포지수" />
+  <title>Fear Score — 비트코인 시장 공포 대시보드</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0a1019;--panel:#111c2b;--border:#243346;--text:#ebf3ff;--muted:#91a6bc;--blue:#66a6ff;--orange:#f6bb73;--red:#ff7883;--green:#63d6b8}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#172b47 0,transparent 42%),var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--text);letter-spacing:-.02em}button{font:inherit}a{color:#8bc0ff;text-decoration:none}a:hover{text-decoration:underline}
+    .wrap{max-width:1250px;margin:auto;padding:0 24px 62px}header{padding:28px 0 24px;display:flex;justify-content:space-between;gap:18px;align-items:center;border-bottom:1px solid var(--border)}.brand{display:flex;gap:13px;align-items:center}.mark{width:39px;height:39px;border-radius:13px;background:linear-gradient(130deg,#3777e4,#62d4cc);display:grid;place-items:center;color:#071522;font-size:22px;font-weight:800;box-shadow:0 8px 30px #337bff25}.brand h1{font-size:20px;margin:0;letter-spacing:-.04em}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0;letter-spacing:.1em;font-weight:600}.head-meta{text-align:right;font-size:12px;color:var(--muted)}.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#788da5;margin-right:6px}.live-dot.ok{background:var(--green);box-shadow:0 0 0 5px #63d6b820}.hero{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;padding:35px 0 21px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:#8ca9c9}.hero h2{font-size:clamp(26px,4vw,37px);letter-spacing:-.05em;margin:8px 0 10px}.hero p{font-size:14px;line-height:1.65;color:var(--muted);margin:0}.hero .tag{font-size:12px;color:#bfd2e6;border:1px solid #29415b;background:#12253a;padding:9px 12px;border-radius:999px;white-space:nowrap}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 18px}.kpi,.chart-card,.explain,.source{background:linear-gradient(160deg,#142034,#0f1927);border:1px solid var(--border);border-radius:17px}.kpi{padding:19px 19px 20px;min-height:121px}.kpi .name{color:var(--muted);font-size:12px;display:flex;gap:8px;align-items:center}.kpi .num{margin:14px 0 3px;font-size:29px;font-weight:790;font-variant-numeric:tabular-nums;letter-spacing:-.045em}.kpi .sub{font-size:12px;color:#9aafc6}.num.blue{color:var(--blue)}.num.orange{color:var(--orange)}.num.red{color:var(--red)}.chart-card{padding:20px 21px 17px}.chart-head{display:flex;gap:15px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.chart-head h3{margin:0 0 8px;font-size:17px;letter-spacing:-.035em}.chart-head small{color:var(--muted);font-size:12px}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:7px}.range{background:#152439;border:1px solid #2b4058;border-radius:9px;color:#abc1da;cursor:pointer;padding:8px 10px;font-size:12px}.range.active{background:#2a4d72;color:#e6f3ff;border-color:#4b78a9}.range:hover{border-color:#8baece}.legend{display:flex;flex-wrap:wrap;align-items:center;gap:15px;padding:22px 0 4px;color:#a2b8ce;font-size:12px}.swatch{display:inline-block;width:19px;height:3px;border-radius:6px;vertical-align:4px;margin-right:6px}.swatch.dash{height:0;border-top:2px dashed #a7b4c5;width:19px}.checkbox{cursor:pointer;white-space:nowrap}.checkbox input{accent-color:#f6bb73;vertical-align:-2px;margin-right:5px}.chart-viewport{position:relative;height:420px;width:100%;margin-top:6px;touch-action:pan-y}.chart-viewport svg{width:100%;height:100%;display:block}.chart-viewport svg text{font-family:inherit}.tooltip{display:none;pointer-events:none;position:absolute;z-index:4;background:#0a1220ee;border:1px solid #3a5571;border-radius:12px;padding:10px 12px;box-shadow:0 12px 34px #02060ab8;min-width:175px;font-size:12px;line-height:1.8;color:#d3e3f2}.tooltip strong{font-size:12px;color:white}.tooltip .l{color:#a6bfdc}.tooltip .r{float:right;padding-left:10px;font-variant-numeric:tabular-nums}.chart-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:#819bb5;font-size:11px;border-top:1px solid var(--border);padding-top:14px}.alert{margin:18px 0 0;border:1px solid #4e3a2b;background:#35281970;color:#e7c8a7;padding:13px 16px;border-radius:12px;font-size:13px;line-height:1.6}.alert.success{border-color:#295445;background:#132f2b;color:#b6e8d5}.alert.hidden{display:none}.lower{display:grid;grid-template-columns:1.25fr 1fr;gap:15px;margin-top:18px}.explain,.source{padding:22px}.explain h3,.source h3{margin:0 0 12px;font-size:15px}.explain p,.source p{font-size:13px;color:#a8bbd0;line-height:1.8;margin:0 0 12px}.formula{font-size:14px;font-weight:750;line-height:1.6;color:#dbeaff;background:#0b1523;border:1px solid #26374b;border-radius:11px;padding:12px;margin:11px 0}.sources{display:flex;flex-direction:column;gap:10px;font-size:13px}.sources a{display:flex;align-items:center;gap:10px}.sources .pill{border-radius:5px;border:1px solid #345478;background:#172b44;padding:3px 5px;font-size:10px;color:#b3d9fe;min-width:42px;text-align:center}.source .action{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.btn{font-size:12px;padding:9px 12px;border:1px solid #42688c;background:#203b59;color:#ecf5ff;border-radius:9px;cursor:pointer}.btn.secondary{background:transparent;border-color:#34506b}.btn:hover{filter:brightness(1.2)}footer{color:#748da6;font-size:11px;line-height:1.65;margin-top:26px}.reference img{width:100%;border-radius:12px;border:1px solid #3b4b5e}.reference{display:none;padding-top:8px}.reference .help{font-size:12px;color:#a5b4c9;margin:10px 0}.empty{height:100%;display:flex;align-items:center;justify-content:center;color:#b4c9e1;font-size:14px;line-height:1.8;text-align:center;border:1px dashed #3b4d65;border-radius:13px;background:#0b1626; padding:15px}.top-tabs{display:flex;gap:8px;align-items:center;margin:0 0 15px}.top-tabs button{background:none;border:0;border-bottom:2px solid transparent;color:#8fa9c0;padding:11px 8px;cursor:pointer;font-size:13px}.top-tabs button.on{color:#dcecff;border-color:var(--blue);font-weight:750}@media(max-width:800px){.wrap{padding:0 14px 40px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kpi{padding:16px;min-height:110px}.kpi .num{font-size:25px}.lower{grid-template-columns:1fr}.chart-viewport{height:345px}.chart-card{padding:15px 10px 17px}.chart-head{padding:0 6px}.legend{padding-left:6px;gap:10px;font-size:11px}.hero{padding-top:25px}.head-meta{font-size:10px}.brand h1{font-size:16px}.hero h2{font-size:27px}}@media(max-width:440px){.brand p{font-size:9px}.brand{gap:8px}.mark{width:33px;height:33px}.kpi .num{font-size:22px}.head-meta{font-size:9px}.chart-viewport{height:315px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand"><div class="mark">F</div><div><h1>Fear Score<span style="color:#84b6ec">.</span></h1><p>MARKET STRESS MONITOR</p></div></div><div class="head-meta"><span class="live-dot" id="liveDot"></span><span id="updateText">데이터 연결 확인 중</span><div style="margin-top:5px">미국 시장 일간 데이터 · KST</div></div></header>
+  <section class="hero"><div><div class="eyebrow">BTC × MARKET FEAR</div><h2>시장이 얼마나 두려워하는가?</h2><p>VIX · MOVE · 하이일드 신용스프레드의 표준화 점수를 합친<br class="desktop-only"> 비트코인 시장 스트레스 지표</p></div><span class="tag">Fundstrat 차트 재구성 · 비공식</span></section>
+  <section class="kpis">
+    <article class="kpi"><div class="name">종합 공포지수</div><div class="num blue" id="score">—</div><div class="sub" id="status">데이터 대기 중</div></article>
+    <article class="kpi"><div class="name">비트코인 (BTC/USD)</div><div class="num orange" id="btc">—</div><div class="sub" id="btcDate">최신 종가 기준</div></article>
+    <article class="kpi"><div class="name">극단적 공포 기준</div><div class="num red">+1.50</div><div class="sub">점수가 높을수록 공포 증가</div></article>
+    <article class="kpi"><div class="name">+1.5 이상 관측일</div><div class="num" id="events">—</div><div class="sub">표시 기간 중 해당 거래일</div></article>
+  </section>
+  <section class="chart-card">
+    <div class="top-tabs"><button class="on" data-tab="chart">대시보드</button><button data-tab="reference">원본 차트 이미지</button></div>
+    <div id="mainPanel"><div class="chart-head"><div><h3>Composite Fear Score vs Bitcoin</h3><small>좌측: 공포 Z점수 / 우측: BTC 가격 (로그 축)</small></div><div class="controls"><button class="range" data-range="6m">6개월</button><button class="range" data-range="1y">1년</button><button class="range" data-range="3y">3년</button><button class="range active" data-range="all">전체</button></div></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--blue)"></i>복합 공포지수</span><label class="checkbox"><input type="checkbox" id="showBtc" checked><i class="swatch" style="background:var(--orange)"></i>BTC</label><span><i class="swatch dash"></i>+1.50 공포 기준</span><span>● 공포 급증일</span></div>
+      <div class="chart-viewport" id="chartViewport"><div class="empty" id="empty">데이터를 불러오는 중입니다.</div><svg id="chart" style="display:none" role="img" aria-label="공포 지수와 비트코인 가격 차트"></svg><div class="tooltip" id="tooltip"></div></div>
+      <div class="chart-foot"><span id="dataRange">분석 기간: 2020년 1월 이후</span><span>그래프에 손가락을 대면 날짜별 수치를 확인할 수 있어요</span></div>
+    </div>
+    <div class="reference" id="reference"><img src="assets/fundstrat-reference.jpg" alt="사용자가 제공한 Fundstrat 공포지수 원본 차트"><div class="help">이 이미지는 비교용으로 제공된 원본이며, 자동 갱신되지 않습니다.</div></div>
+  </section>
+  <div class="alert" id="warning" role="status">데이터 연동 상태 확인 중입니다.</div>
+  <section class="lower">
+    <article class="explain"><h3>지수 산출 방식</h3><p>각 지표를 2020년 1월~2026년 11월 자료로 표준화한 다음 세 Z점수를 평균합니다. 원본 차트의 산식을 추정 재구성한 것으로, Fundstrat의 공식 지수가 아닙니다.</p><div class="formula">공포점수 = (Z(VIX) + Z(MOVE) + Z(HY OAS)) ÷ 3</div><p>+1.5를 넘으면 역사적으로 세 시장의 위험 회피 심리가 강해진 구간으로 표시합니다. +1.5가 반드시 비트코인 저점이라는 뜻은 아닙니다.</p><p id="basetext">기준 통계 범위는 데이터를 불러온 후 표시됩니다.</p></article>
+    <article class="source"><h3>데이터 출처 · 관리</h3><div class="sources"><a href="https://www.cboe.com/tradable_products/vix/vix_historical_data/" target="_blank" rel="noopener"><span class="pill">VIX</span>Cboe 공식 변동성 지수</a><a href="https://finance.yahoo.com/quote/%5EMOVE/" target="_blank" rel="noopener"><span class="pill">MOVE</span>ICE BofA MOVE · Yahoo Finance 조회</a><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener"><span class="pill">OAS</span>FRED 하이일드 스프레드</a><a href="https://finance.yahoo.com/quote/BTC-USD/" target="_blank" rel="noopener"><span class="pill">BTC</span>Yahoo Finance BTC-USD</a></div><div class="action"><button class="btn" id="exportCsv">CSV 다운로드</button><button class="btn secondary" id="reload">새로고침</button></div></article>
+  </section>
+  <footer>이 사이트는 투자 참고용 비공식 데이터 도구이며 투자 권유가 아닙니다. 자동 갱신은 GitHub Actions 스케줄에 따라 실행되고, 공휴일·데이터 제공자 지연·조회 제한으로 최신 날짜가 늦을 수 있습니다. 수치가 확인되지 않으면 실제값을 추측해서 표시하지 않습니다.</footer>
+</div>
+<script src="./data.js"></script>
+<script>
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const fmtPrice=n=>!Number.isFinite(n)?'—':'$'+Math.round(n).toLocaleString('en-US');
+  const fmtScore=n=>!Number.isFinite(n)?'—':(n>=0?'+':'')+n.toFixed(2);
+  const fmtVal=n=>!Number.isFinite(n)?'—':n.toFixed(2);
+  const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let rows=[],range='all',showBtc=true,activeTab='chart',meta={};
+  const data=window.FEARDATA;
+  function banner(message,ok=false){$('warning').className='alert'+(ok?' success':'');$('warning').textContent=message;}
+  function parseData(){
+    if(!data||!Array.isArray(data.rows)||data.rows.length<2){
+      $('empty').innerHTML='<div>아직 자동 수집 데이터가 없습니다.<br>GitHub Pages에 올린 뒤 워크플로를 1회 실행하면 차트가 생성됩니다.<br><small>현재는 「원본 차트 이미지」 탭에서 기존 자료를 볼 수 있어요.</small></div>';
+      banner(data&&data.message?data.message:'데이터 미연결: 저장소에서 자동 갱신을 한 번 실행해 주세요. 현재 수치는 표시하지 않습니다.');return;
+    }
+    meta=data.meta||{};
+    rows=data.rows.filter(r=>Number.isFinite(r.score)&&Number.isFinite(r.btc)&&r.btc>0).map(r=>({...r,t:Date.parse(r.date+'T00:00:00Z')}));
+    if(rows.length<2){banner('표시할 유효한 수치가 충분하지 않습니다.');return;}
+    const x=rows[rows.length-1],prev=rows[rows.length-2];
+    $('score').textContent=fmtScore(x.score); $('score').className='num '+(x.score>=1.5?'red':'blue');
+    $('status').textContent=x.score>=1.5?'극단적 공포':x.score>=0.7?'공포 확대':x.score>=0?'평균 이상':'평균 이하';
+    $('btc').textContent=fmtPrice(x.btc); $('btcDate').textContent='기준일 '+x.date;
+    $('updateText').textContent='최신 데이터 '+x.date;
+    $('basetext').textContent='표준화 기준: '+(meta.baseline_start||'2020-01-01')+' ~ '+(meta.baseline_end||'2026-11-30')+' ('+(meta.baseline_count||'—')+'개 관측치). 통계는 해당 기간의 전체 표본으로 계산합니다.';
+    $('dataRange').textContent='수집 기간 '+rows[0].date+' ~ '+x.date;
+    const d=Math.floor((Date.now()-Date.parse(x.date+'T00:00:00Z'))/86400000);
+    if(d>7)banner('주의: 마지막 유효 데이터가 '+d+'일 전('+x.date+')입니다. 자동 수집 또는 데이터 제공 지연을 확인하세요.');
+    else { $('liveDot').classList.add('ok'); banner('연결됨 · 종합지수 '+fmtScore(x.score)+' · 전 거래일 대비 '+fmtScore(x.score-prev.score)+'포인트 · 수집 후 갱신된 최신 일별 데이터입니다.',true); }
+    render();
+  }
+  function getFiltered(){const ms={'6m':183,'1y':365,'3y':1096,'all':99999}[range]*86400000;const end=rows.at(-1).t;return rows.filter(x=>x.t>=end-ms);}
+  function render(){
+    if(rows.length<2)return;
+    const r=getFiltered(),n=r.length,w=Math.max(320,$('chartViewport').clientWidth),h=Math.max(280,$('chartViewport').clientHeight);const p={l:w<500?41:50,r:w<500?47:68,t:19,b:31};
+    const pw=w-p.l-p.r,ph=h-p.t-p.b,t0=r[0].t,t1=r[n-1].t,scaleX=t=>p.l+(t-t0)/Math.max(1,t1-t0)*pw;
+    const scores=r.map(x=>x.score),lo=Math.min(-1.5,Math.min(...scores)-.35),hi=Math.max(2.3,Math.max(...scores)+.35),yScore=s=>p.t+(hi-s)/(hi-lo)*ph;
+    const btcPrices=r.map(x=>x.btc),minBTC=Math.min(...btcPrices)*.87,maxBTC=Math.max(...btcPrices)*1.13,log0=Math.log(minBTC),logspan=Math.max(.1,Math.log(maxBTC)-log0),yBTC=b=>p.t+(Math.log(maxBTC)-Math.log(b))/logspan*ph;
+    const path=(getY)=>r.map((x,i)=>(i?'L':'M')+scaleX(x.t).toFixed(1)+','+getY(x).toFixed(1)).join(' ');
+    const count=r.filter(x=>x.score>=1.5).length;$('events').textContent=count.toLocaleString('ko-KR')+'일';
+    const e=[];
+    for(let i=0;i<6;i++){
+      const val=lo+(hi-lo)*(i/5),yy=yScore(val);e.push(`<line x1="${p.l}" x2="${w-p.r}" y1="${yy}" y2="${yy}" stroke="#2a3d50" stroke-width="1"/><text x="${p.l-8}" y="${yy+4}" text-anchor="end" fill="#829bb4" font-size="11">${val>=0?'+':''}${val.toFixed(1)}</text>`)
+    }
+    if(showBtc){for(let i=0;i<5;i++){
+      let price=Math.exp(log0+logspan*i/4),yy=yBTC(price);
+      e.push(`<text x="${w-p.r+9}" y="${yy+4}" text-anchor="start" fill="#b79c78" font-size="11">${price>=1000?'$'+Math.round(price/1000)+'k':'$'+Math.round(price)}</text>`);
+    }}
+    const first=new Date(t0).getUTCFullYear(),last=new Date(t1).getUTCFullYear();
+    const ticks=[];for(let y=first;y<=last;y++){for(let m of [0,6]){const dt=Date.UTC(y,m,1);if(dt<=t0||dt>=t1)continue;if(ticks.length && (dt-ticks.at(-1))<(t1-t0)/Math.max(2,Math.floor(pw/92)))continue;ticks.push(dt);}}
+    if(ticks.length<2){for(let i=0;i<4;i++)ticks.push(t0+(t1-t0)*i/3)}
+    for(const tt of ticks){let xx=scaleX(tt),date=new Date(tt),label=(t1-t0<400*86400000)?(date.getUTCMonth()+1)+'월':String(date.getUTCFullYear())+(date.getUTCMonth()===6?' 하반기':'');e.push(`<text x="${xx}" y="${h-8}" font-size="11" fill="#8399b3" text-anchor="middle">${escapeHTML(label)}</text>`)}
+    const threshold=yScore(1.5);e.push(`<line x1="${p.l}" x2="${w-p.r}" y1="${threshold}" y2="${threshold}" stroke="#d4dae4" stroke-dasharray="6,6" stroke-opacity=".7" stroke-width="1.5"/><text x="${w-p.r-5}" y="${threshold-8}" text-anchor="end" font-size="11" fill="#d4dae4">+1.5</text>`);
+    if(showBtc)e.push(`<path d="${path(x=>yBTC(x.btc))}" fill="none" stroke="#f5b974" stroke-width="2" stroke-linejoin="round" opacity=".9" vector-effect="non-scaling-stroke"/>`);
+    e.push(`<path d="${path(x=>yScore(x.score))}" fill="none" stroke="#75adff" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`);
+    const extreme=r.filter(x=>x.score>=1.5);for(const x of extreme)e.push(`<circle cx="${scaleX(x.t).toFixed(1)}" cy="${yScore(x.score).toFixed(1)}" r="${pw>650?2.7:2.0}" fill="#0c1118" stroke="#f8d59c" stroke-width="1.2"/>`);
+    e.push(`<line id="crosshair" x1="${p.l}" x2="${p.l}" y1="${p.t}" y2="${h-p.b}" stroke="#8da8c2" stroke-dasharray="4,4" opacity="0"/><circle id="hoverDot" cx="${p.l}" cy="${p.t}" r="4" fill="#75adff" stroke="#e4f2ff" stroke-width="1" opacity="0"/>`);
+    const svg=$('chart');svg.style.display='block';$('empty').style.display='none';svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.innerHTML=e.join('');
+    svg.onpointermove=ev=>{const rect=svg.getBoundingClientRect(),sx=(ev.clientX-rect.left)/rect.width*w,frac=Math.min(1,Math.max(0,(sx-p.l)/pw)),tt=t0+(t1-t0)*frac;
+      let l=0,u=n-1;while(l<u){const mid=Math.floor((l+u)/2);if(r[mid].t<tt)l=mid+1;else u=mid}let ix=l;if(ix>0 && tt-r[ix-1].t<r[ix].t-tt)ix--;
+      const x=r[ix],cx=scaleX(x.t),cy=yScore(x.score);svg.querySelector('#crosshair').setAttribute('x1',cx);svg.querySelector('#crosshair').setAttribute('x2',cx);svg.querySelector('#crosshair').setAttribute('opacity','1');svg.querySelector('#hoverDot').setAttribute('cx',cx);svg.querySelector('#hoverDot').setAttribute('cy',cy);svg.querySelector('#hoverDot').setAttribute('opacity','1');
+      const tip=$('tooltip');tip.style.display='block';tip.innerHTML=`<strong>${escapeHTML(x.date)}</strong><div><span class="l">공포지수</span><span class="r" style="color:#80b5ff">${fmtScore(x.score)}</span></div><div><span class="l">BTC</span><span class="r">${fmtPrice(x.btc)}</span></div><div><span class="l">VIX / MOVE / HY</span><span class="r">${fmtVal(x.vix)} / ${fmtVal(x.move)} / ${fmtVal(x.oas)}</span></div>`;
+      const bound=$('chartViewport').getBoundingClientRect(),left=Math.min(Math.max(4,ev.clientX-bound.left+12),bound.width-tip.offsetWidth-5),top=Math.min(Math.max(4,ev.clientY-bound.top+12),bound.height-tip.offsetHeight-5);tip.style.left=left+'px';tip.style.top=top+'px';
+    };
+    svg.onpointerleave=()=>{svg.querySelector('#crosshair').setAttribute('opacity','0');svg.querySelector('#hoverDot').setAttribute('opacity','0');$('tooltip').style.display='none'};
+  }
+  document.querySelectorAll('[data-range]').forEach(btn=>btn.addEventListener('click',()=>{range=btn.dataset.range;document.querySelectorAll('[data-range]').forEach(x=>x.classList.toggle('active',x===btn));render()}));
+  $('showBtc').addEventListener('change',e=>{showBtc=e.target.checked;render()});
+  document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{activeTab=btn.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===btn));$('mainPanel').style.display=activeTab==='chart'?'block':'none';$('reference').style.display=activeTab==='reference'?'block':'none';if(activeTab==='chart')render()}));
+  $('reload').onclick=()=>location.reload();
+  $('exportCsv').onclick=()=>{if(!rows.length){banner('CSV로 내보낼 수 있는 유효한 데이터가 없습니다.');return}const keys=['date','score','btc','vix','move','oas'],csv=[keys.join(','),...rows.map(row=>keys.map(k=>row[k]).join(','))].join('\r\n');const b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='fear-score-'+rows.at(-1).date+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+  let resizeTimer=0;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(activeTab==='chart')render()},100)});
+  parseData();
+})();
+</script>
+</body></html>
